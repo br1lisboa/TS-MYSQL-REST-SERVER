@@ -3,6 +3,8 @@ import express, { Application } from 'express';
 import usersRoutes from '../routes/user.router';
 import cors from "cors";
 
+import db from '../db/connection';
+
 class Server {
     // A diferencia de js vanila, aca tenemos que definir las propiedades antes de utilizarlas
     private app: Application;
@@ -16,6 +18,8 @@ class Server {
         this.app = express();
         this.port = process.env.PORT || '8000';
 
+        this.connectDB()
+
         // Activamos nuestros middle
         this.middlewares()
 
@@ -25,7 +29,16 @@ class Server {
     };
 
     // Conectar BD
-    //TODO: BD
+    async connectDB() {
+
+        try {
+            await db.authenticate();
+            console.log('db online');
+        } catch (err) {
+            throw new Error()
+        }
+
+    };
 
     // Middle
     middlewares() {
